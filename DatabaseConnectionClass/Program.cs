@@ -24,26 +24,97 @@ namespace DatabaseConnectionClass
 
         public void UpdateEmplpoyeeDetail(ref List<Employee> lobjEmpList)
         {
+
             foreach (Employee lobjTempemp in lobjEmpList)
             {
-                Console.WriteLine("Old First Name :- {0}", first_name);
+                Console.WriteLine("Old First Name :- {0}", lobjTempemp.first_name);
+                
                 Console.WriteLine("Enter A new First Name");
                 string lsFirst_Name = Console.ReadLine();
                 if (lsFirst_Name.Length != 0)
                 {
-                    lobjTempemp.first_name = lsFirst_Name;
-                  
+                    first_name = lsFirst_Name;
+
                 }
-                Console.WriteLine(lobjEmpList[0].first_name);
-                Console.ReadKey();
+
+                Console.WriteLine("Old Last name :- {0}", lobjTempemp.last_name);
+                Console.WriteLine("Enter A new last Name");
+                string lsLast_name = Console.ReadLine();
+                if (lsLast_name.Length != 0)
+                {
+                    last_name = lsFirst_Name;
+
+                }
+
+                Console.WriteLine("Old Birth-Date :- {0}", lobjTempemp.birth_date);
+
+                Console.WriteLine("Enter A new Birth Date ");
+                DateTime lsBirth_date = DateTime.Parse(Console.ReadLine());
+                int lnLen = lsBirth_date.ToString().Length;
+                if (lnLen != 0)
+                {
+                    birth_date = lsBirth_date;
+
+                }
+
+
+                Console.WriteLine("Old Gender Type :- {0}", lobjTempemp.sex);
+                Console.WriteLine("Enter A new Gender");
+                string lsSex = (Console.ReadLine());
+                if (lsSex.Length != 0)
+                {
+                    sex = lsSex;
+
+                }
+
+                TimeSpan lobjTimeSpan = DateTime.Now.Subtract((DateTime)birth_date);
+
+
+                age = lobjTimeSpan.TotalDays / 365.0;
+
+                Console.WriteLine("Old Address  :- {0}", lobjTempemp.address);
+                Console.WriteLine("Enter A new Gender");
+                string lsAddress = (Console.ReadLine());
+                if (lsAddress.Length != 0)
+                {
+                   address= lsAddress;
+
+                }
+
+
+                Console.WriteLine("Old Salary  :- {0}", lobjTempemp.salary);
+                Console.WriteLine("Enter A new salary");
+                string  lfSalary = (Console.ReadLine());
+                if (lfSalary.Length != 0)
+                {
+                   salary = float.Parse(lfSalary);
+
+                }
+
+                Console.WriteLine("Old Dept _ id  :- {0}", lobjTempemp.dept_id);
+                Console.WriteLine("Enter A new DeptID");
+                string lsDept_id = (Console.ReadLine());
+                if (lsDept_id.Length != 0)
+                {
+                    dept_id = int.Parse(lsDept_id);
+
+                }
+
+
+
+
+
+                //Console.ReadKey();
             }
+
+            //Console.WriteLine(lobjEmpList.first_name);
             string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
 
             string lsQuery = "";
             using (SqlConnection lobjCon = new SqlConnection(lsConnStr))
             {
-                lsQuery = "UPDATE EmployeeNew SET  first_name = '" + lobjEmpList[0].first_name;
-                //lsQuery += "sex='" + lobjEmpList[3].sex + "',age=" + lobjEmpList[4].age.ToString() + ",address ='" + lobjEmpList[5].address + ",salary=" + lobjEmpList[6].salary.ToString() + ",dept_id='" + lobjEmpList[7].dept_id.ToString() + ")";
+                lsQuery = "UPDATE EmployeeNew SET  first_name = '" + first_name + "',last_name='" + last_name + "',birth_date='" + ((DateTime)birth_date).ToString("dd-MMM-yyyy") + "',";
+                lsQuery += "sex='" + sex + "',age=" + age.ToString() + ",address ='" + address.ToString() +"'" + ",salary=" + salary.ToString() + ",dept_id=" + dept_id.ToString() ;
                 lsQuery += " WHERE  emp_id = " + emp_id.ToString();
                 SqlCommand cmd = new SqlCommand(lsQuery, lobjCon);
                 cmd.CommandType = System.Data.CommandType.Text;
@@ -304,7 +375,7 @@ namespace DatabaseConnectionClass
 
                 else
                 {
-                    lsQuery = "UPDATE EmployeeNew SET    first_name = '" + first_name + "', first_name = '"+first_name + "',last_name='"+last_name + "',birth_date='"+((DateTime)birth_date).ToString("dd-MMM-yyyy")+ "','";
+                    lsQuery = "UPDATE EmployeeNew SET  first_name = '"+first_name + "',last_name='"+last_name + "',birth_date='"+((DateTime)birth_date).ToString("dd-MMM-yyyy")+ "','";
                     lsQuery += "sex='" + sex + "',age=" + age.ToString() + ",address ='" + address + ",salary=" + salary.ToString() + ",dept_id='" + dept_id.ToString() + ")";
                     lsQuery += "WHERE  emp_id = " + emp_id.ToString();
                 }
