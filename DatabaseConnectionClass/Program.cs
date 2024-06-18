@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,9 +22,227 @@ namespace DatabaseConnectionClass
         public int dept_id { get; set; }
         public string Data_File { get; set; }
         public Employee() { }
+        public Employee(Employee lobj) {
+
+            emp_id = lobj.emp_id;
+            first_name = lobj.first_name;
+            last_name = lobj.last_name;
+            age = lobj.age;
+            sex = lobj.sex;
+            age = lobj.age;
+            address = lobj.address;
+            salary = lobj.salary;
+            dept_id = lobj.dept_id;
+        }
         public void Add()
         {
 
+        }
+        public void show()
+        {
+            Console.WriteLine($"name {first_name} {last_name}|Date of Birth: {birth_date} | Sex: {sex} | address: {address} |" +
+                $" salary: {salary} |  dept_id: {dept_id}");
+           
+        }
+        public List<Employee> List()
+        {
+            List<Employee> lobjEmpList = new List<Employee>();
+         
+            string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
+            using (SqlConnection lobjconn = new SqlConnection(lsConnStr))
+            {
+                string lsQuery = "SELECT emp_id,first_name,last_name,birth_date,sex,age,address,salary,dept_id FROM EmployeeNew";
+                SqlCommand cmd = new SqlCommand(lsQuery, lobjconn);
+                cmd.CommandType = System.Data.CommandType.Text;
+                lobjconn.Open();
+                using(SqlDataReader lobjSDR = cmd.ExecuteReader())
+                {
+                    if (lobjSDR.HasRows)
+                    {
+                        while (lobjSDR.Read())
+                        {
+                            emp_id = (int)lobjSDR[0];
+
+
+                            if (DBNull.Value.Equals(lobjSDR[1]))
+                                {
+                                first_name = "";
+                                }
+                            else
+                            {
+                                first_name = lobjSDR[1].ToString();
+                            }
+
+                            if (DBNull.Value.Equals(lobjSDR[2]))
+                            {
+                                last_name = "";
+                            }
+                            else
+                            {
+                               last_name = lobjSDR[2].ToString();
+                            }
+
+
+
+                            if (DBNull.Value.Equals(lobjSDR[3]))
+                            {
+                                birth_date = null;
+                            }
+                            else
+                            {
+                                birth_date = (DateTime)lobjSDR[3];
+                            }
+
+
+                            if (DBNull.Value.Equals(lobjSDR[4]))
+                            {
+                                sex = "";
+                            }
+                            else
+                            {
+                                sex = lobjSDR[4].ToString();
+                            }
+
+
+                            if (DBNull.Value.Equals(lobjSDR[5]))
+                            {
+                                age = null;
+                            }
+                            else
+                            {
+                                age = (double)lobjSDR[5];
+                            }
+
+                            if (DBNull.Value.Equals(lobjSDR[6]))
+                            {
+                                address = "";
+                            }
+                            else
+                            {
+                                address = lobjSDR[6].ToString();
+                            }
+
+
+                            if (DBNull.Value.Equals(lobjSDR[7])){
+                                salary = null;
+                            }
+                            else
+                            {
+                                salary = (double)lobjSDR[7];
+                            }
+
+                            dept_id = (int)lobjSDR[8];
+
+
+                            lobjEmpList.Add(new Employee(this));
+                        }
+                    }
+                }
+                lobjconn.Close();
+            }
+            return lobjEmpList;
+        }
+
+        public List<Employee> find(string inEmpId)
+        {
+
+            List<Employee> lobjEmpList = new List<Employee>();
+
+            string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
+            using (SqlConnection lobjconn = new SqlConnection(lsConnStr))
+            {
+                string lsQuery = "SELECT emp_id,first_name,last_name,birth_date,sex,age,address,salary,dept_id FROM EmployeeNew ";
+                lsQuery +="WHERE emp_id =" + inEmpId;
+                SqlCommand cmd = new SqlCommand(lsQuery, lobjconn);
+                cmd.CommandType = System.Data.CommandType.Text;
+                lobjconn.Open();
+                using (SqlDataReader lobjSDR = cmd.ExecuteReader())
+                {
+                    if (lobjSDR.HasRows)
+                    {
+                        while (lobjSDR.Read())
+                        {
+                            emp_id = (int)lobjSDR[0];
+
+
+                            if (DBNull.Value.Equals(lobjSDR[1]))
+                            {
+                                first_name = "";
+                            }
+                            else
+                            {
+                                first_name = lobjSDR[1].ToString();
+                            }
+
+                            if (DBNull.Value.Equals(lobjSDR[2]))
+                            {
+                                last_name = "";
+                            }
+                            else
+                            {
+                                last_name = lobjSDR[2].ToString();
+                            }
+
+
+
+                            if (DBNull.Value.Equals(lobjSDR[3]))
+                            {
+                                birth_date = null;
+                            }
+                            else
+                            {
+                                birth_date = (DateTime)lobjSDR[3];
+                            }
+
+
+                            if (DBNull.Value.Equals(lobjSDR[4]))
+                            {
+                                sex = "";
+                            }
+                            else
+                            {
+                                sex = lobjSDR[4].ToString();
+                            }
+
+
+                            if (DBNull.Value.Equals(lobjSDR[5]))
+                            {
+                                age = null;
+                            }
+                            else
+                            {
+                                age = (double)lobjSDR[5];
+                            }
+
+                            if (DBNull.Value.Equals(lobjSDR[6]))
+                            {
+                                address = "";
+                            }
+                            else
+                            {
+                                address = lobjSDR[6].ToString();
+                            }
+
+
+                            if (DBNull.Value.Equals(lobjSDR[7]))
+                            {
+                                salary = null;
+                            }
+                            else
+                            {
+                                salary = (double)lobjSDR[7];
+                            }
+
+                            dept_id = (int)lobjSDR[8];
+
+
+                            lobjEmpList.Add(new Employee(this));
+                        }
+                    }
+                }
+                lobjconn.Close();
+            }
+            return lobjEmpList;
         }
        public bool Save()
         {
@@ -65,14 +285,35 @@ namespace DatabaseConnectionClass
             }
             return true;
         }
+        public bool checkValidName(string inname)
+        {
+            for(int lncnt  = 0; lncnt < inname.Length; lncnt++)
+            {
+                if ((inname[lncnt] >= 'a' && inname[lncnt] <= 'z') || (inname[lncnt] >= 'A' && inname[lncnt] <= 'Z'))
+                    continue;
+                else
+                {
+                    Console.WriteLine("---------Not Valid Name---------");
+                    return false;
+                }
 
+            }
+            return true;
+        }
         public void ReadInput()
         {
-            Console.WriteLine("First Name");
-            first_name = Console.ReadLine();
+            do {
+                Console.WriteLine("First Name");
+                first_name = Console.ReadLine();
+            }while(!checkValidName(first_name));
 
-            Console.WriteLine("Last Name");
-            last_name = Console.ReadLine();
+
+            do {
+                Console.WriteLine("Last Name");
+                last_name = Console.ReadLine();
+            }while(!checkValidName(last_name));
+
+
 
             Console.WriteLine("DOB");
             birth_date=DateTime.Parse(Console.ReadLine());
@@ -108,13 +349,15 @@ namespace DatabaseConnectionClass
         static void Main(string[] args)
         {
             Employee lobjEmp = new Employee();
+            List<Employee> lobjEmpList = new List<Employee>();
+
             bool lbExit = false;
             while(!lbExit)
             {
                 Console.WriteLine("Enter Exit 0");
                 Console.WriteLine("Enter Add Employee 1");
-                Console.WriteLine("Enter Find Employee 2");
-                Console.WriteLine("Enter Delete Employee 3");
+                Console.WriteLine("Enter list Employee 2");
+                Console.WriteLine("Enter Find Employee 3");
               string lsChoice = Console.ReadLine();
                 switch (lsChoice)
                 {
@@ -122,9 +365,34 @@ namespace DatabaseConnectionClass
                         lbExit = true; 
                         break;
                     case "1":
+                 
                         lobjEmp.ReadInput();
                         lobjEmp.Save();
                         break;
+                     case "2":
+                       
+                        lobjEmpList = lobjEmp.List();
+                        foreach( Employee lobjTempemp in lobjEmpList)
+                        {
+                            lobjTempemp.show();
+                        }
+                       break;
+
+                    case "3":
+                        Console.WriteLine("Enter Employee ID");
+                        string lsEmpId = Console.ReadLine();
+                        lobjEmpList = lobjEmp.find(lsEmpId);
+                        if (lobjEmpList.Count == 0)
+                            Console.WriteLine("Wrong Employee Id");
+                        else
+                        {
+                            foreach (Employee lobjTempemp in lobjEmpList)
+                            {
+                                lobjTempemp.show();
+                            }
+                        }
+                        break;
+
                 }
             }
         }
