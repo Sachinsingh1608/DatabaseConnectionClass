@@ -21,6 +21,46 @@ namespace DatabaseConnectionClass
         public double? salary { get; set; }
         public int dept_id { get; set; }
         public string Data_File { get; set; }
+
+        public void UpdateEmplpoyeeDetail(ref List<Employee> lobjEmpList)
+        {
+            foreach (Employee lobjTempemp in lobjEmpList)
+            {
+                Console.WriteLine("Old First Name :- {0}", first_name);
+                Console.WriteLine("Enter A new First Name");
+                string lsFirst_Name = Console.ReadLine();
+                if (lsFirst_Name.Length != 0)
+                {
+                    lobjTempemp.first_name = lsFirst_Name;
+                  
+                }
+                Console.WriteLine(lobjEmpList[0].first_name);
+                Console.ReadKey();
+            }
+            string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
+
+            string lsQuery = "";
+            using (SqlConnection lobjCon = new SqlConnection(lsConnStr))
+            {
+                lsQuery = "UPDATE EmployeeNew SET  first_name = '" + lobjEmpList[0].first_name;
+                //lsQuery += "sex='" + lobjEmpList[3].sex + "',age=" + lobjEmpList[4].age.ToString() + ",address ='" + lobjEmpList[5].address + ",salary=" + lobjEmpList[6].salary.ToString() + ",dept_id='" + lobjEmpList[7].dept_id.ToString() + ")";
+                lsQuery += " WHERE  emp_id = " + emp_id.ToString();
+                SqlCommand cmd = new SqlCommand(lsQuery, lobjCon);
+                cmd.CommandType = System.Data.CommandType.Text;
+                try
+                {
+                    lobjCon.Open();
+                    cmd.ExecuteNonQuery();
+                    lobjCon.Close();
+                }
+                catch (SqlException Ex)
+                {
+                    Console.WriteLine(Ex.Message);
+
+                }
+            }
+
+            }
         public Employee() { }
         public Employee(Employee lobj) {
 
@@ -355,9 +395,10 @@ namespace DatabaseConnectionClass
             while(!lbExit)
             {
                 Console.WriteLine("Enter Exit 0");
-                Console.WriteLine("Enter Add Employee 1");
-                Console.WriteLine("Enter list Employee 2");
-                Console.WriteLine("Enter Find Employee 3");
+                Console.WriteLine("Enter 1 Add Employee ");
+                Console.WriteLine("Enter 2 list Employee ");
+                Console.WriteLine("Enter 3 Find Employee ");
+                Console.WriteLine("Enter 4 Update Employee");
               string lsChoice = Console.ReadLine();
                 switch (lsChoice)
                 {
@@ -392,6 +433,19 @@ namespace DatabaseConnectionClass
                             }
                         }
                         break;
+                    case "4":
+                        Console.WriteLine("Enter Employee ID");
+                        string lsEmpIdUp = Console.ReadLine();
+                        lobjEmpList = lobjEmp.find(lsEmpIdUp);
+                        if (lobjEmpList.Count == 0)
+                            Console.WriteLine("Wrong Employee Id");
+
+                        else
+                        {
+                            lobjEmp.UpdateEmplpoyeeDetail(ref lobjEmpList);
+                        }
+                        break;
+
 
                 }
             }
