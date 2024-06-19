@@ -85,10 +85,12 @@ namespace DatabaseConnectionClass
                 Console.WriteLine("Old Birth-Date :- {0}", lobjTempemp.birth_date);
 
                 Console.WriteLine("Enter A new Birth Date ");
-                DateTime lsBirth_date = DateTime.Parse(Console.ReadLine());
-                int lnLen = lsBirth_date.ToString().Length;
-                if (lnLen != 0)
+                string lstempdate = Console.ReadLine();
+                
+              
+                if (lstempdate.Length != 0)
                 {
+                    DateTime lsBirth_date = DateTime.Parse(lstempdate);
                     birth_date = lsBirth_date;
 
                 }
@@ -109,7 +111,7 @@ namespace DatabaseConnectionClass
                 age = lobjTimeSpan.TotalDays / 365.0;
 
                 Console.WriteLine("Old Address  :- {0}", lobjTempemp.address);
-                Console.WriteLine("Enter A new Gender");
+                Console.WriteLine("Enter A new Addressa");
                 string lsAddress = (Console.ReadLine());
                 if (lsAddress.Length != 0)
                 {
@@ -492,6 +494,7 @@ namespace DatabaseConnectionClass
             Console.WriteLine($"salary: {salary}");
             Console.WriteLine($"dept_id: {dept_id}");
         }
+
     }
     internal class Program
     {
@@ -500,98 +503,131 @@ namespace DatabaseConnectionClass
             Employee lobjEmp = new Employee();
             List<Employee> lobjEmpList = new List<Employee>();
 
-            bool lbExit = false;
-            while(!lbExit)
-            {
-                Console.Clear();
-                Console.WriteLine("Enter 0 Exit ");
-                Console.WriteLine("Enter 1 Add Employee ");
-                Console.WriteLine("Enter 2 list Employee ");
-                Console.WriteLine("Enter 3 Find Employee ");
-                Console.WriteLine("Enter 4 Update Employee");
-                Console.WriteLine("Enter 5 Delete Employee Record ");
+           // bool lbExit = false;
+            //while(!lbExit)
+            //{
+            //    Console.Clear();
+            //    Console.WriteLine("Enter 0 Exit ");
+            //    Console.WriteLine("Enter 1 Add Employee ");
+            //    Console.WriteLine("Enter 2 list Employee ");
+            //    Console.WriteLine("Enter 3 Find Employee ");
+            //    Console.WriteLine("Enter 4 Update Employee");
+            //    Console.WriteLine("Enter 5 Delete Employee Record ");
 
+            //    string lsChoice = Console.ReadLine();
+            //    switch (lsChoice)
+            //    {
+
+            //        // --------------Exit -------------------
+            //        case "0":
+            //            lbExit = true; 
+            //            break;
+
+            //        // --------------Add Employee -------------------
+            //        case "1":
+
+            //            lobjEmp.ReadInput();
+            //            lobjEmp.Save();
+            //            Console.WriteLine("Save Successfully!");
+            //            Console.ReadKey();
+            //            break;
+            //         // ------------------ List All Employee ----------------
+
+            //        case "2":
+
+            //            lobjEmpList = lobjEmp.List();
+            //            foreach( Employee lobjTempemp in lobjEmpList)
+            //            {
+            //                lobjTempemp.show();
+            //            }
+            //            Console.ReadKey();
+            //           break;
+
+            //            //----------- Find Employee ---------------
+
+            //        case "3":
+            //            Console.WriteLine("Enter Employee ID");
+            //            string lsEmpId = Console.ReadLine();
+            //            lobjEmpList = lobjEmp.Find(lsEmpId);
+            //            if (lobjEmpList.Count == 0)
+            //                Console.WriteLine("Wrong Employee Id");
+            //            else
+            //            {
+            //                foreach (Employee lobjTempemp in lobjEmpList)
+            //                {
+            //                    lobjTempemp.show();
+            //                }
+            //            }
+            //            Console.ReadKey();
+            //            break;
+            //         // ------------ Update Employee Details -----------------
+
+            //        case "4":
+            //            Console.WriteLine("Enter Employee ID");
+            //            string lsEmpIdUp = Console.ReadLine();
+            //            lobjEmpList = lobjEmp.Find(lsEmpIdUp);
+            //            if (lobjEmpList.Count == 0)
+            //                Console.WriteLine("Wrong Employee Id");
+
+            //            else
+            //            {
+            //                lobjEmp.UpdateEmplpoyeeDetail(ref lobjEmpList);
+            //                Console.WriteLine("Update Successfully");
+            //            }
+            //            Console.ReadKey();
+            //            break;
+            //            // --------------- Delete Employee Record ----------------
+
+            //        case "5":
+            //            Console.WriteLine("Enter Employee ID");
+            //            string lsEmpIdDe = Console.ReadLine();
+            //            lobjEmpList = lobjEmp.Find(lsEmpIdDe);
+            //            if (lobjEmpList.Count == 0)
+            //                Console.WriteLine("Wrong Employee Id");
+            //            else
+            //            {
+            //              lobjEmp.DeleteEmployeeRecord(ref lobjEmpList);
+            //            }
+            //            Console.WriteLine("Delete Successfully");
+            //            Console.ReadKey();
+            //            break;
+
+
+            //    }
+            //}
+
+            bool lbExit = false;
+            List<TrainSystem> lobjTrainList = new List<TrainSystem>();
+            TrainSystem lobjTrainSys = new TrainSystem();
+
+            while(!lbExit) 
+            {
+                Console.WriteLine("Enter 1 Add Train");
                 string lsChoice = Console.ReadLine();
+
                 switch (lsChoice)
                 {
-
-                    // --------------Exit -------------------
-                    case "0":
-                        lbExit = true; 
-                        break;
-
-                    // --------------Add Employee -------------------
                     case "1":
-                 
-                        lobjEmp.ReadInput();
-                        lobjEmp.Save();
-                        Console.WriteLine("Save Successfully!");
-                        Console.ReadKey();
+                        lobjTrainSys.ReadInput();
+                        lobjTrainSys.Save();
                         break;
-                     // ------------------ List All Employee ----------------
-
                     case "2":
-                       
-                        lobjEmpList = lobjEmp.List();
-                        foreach( Employee lobjTempemp in lobjEmpList)
+                        lobjTrainList= lobjTrainSys.ListStation();
+                        Console.WriteLine("-----Station Name -----------------");
+                        foreach(TrainSystem lobjTempList in lobjTrainList)
                         {
-                            lobjTempemp.show();
+                            Console.WriteLine(lobjTempList.station);
                         }
-                        Console.ReadKey();
-                       break;
 
-                        //----------- Find Employee ---------------
-
-                    case "3":
-                        Console.WriteLine("Enter Employee ID");
-                        string lsEmpId = Console.ReadLine();
-                        lobjEmpList = lobjEmp.Find(lsEmpId);
-                        if (lobjEmpList.Count == 0)
-                            Console.WriteLine("Wrong Employee Id");
-                        else
-                        {
-                            foreach (Employee lobjTempemp in lobjEmpList)
-                            {
-                                lobjTempemp.show();
-                            }
-                        }
-                        Console.ReadKey();
+                        Console.WriteLine("Enter A Station Name");
+                        string lsStationName = Console.ReadLine();
+                        lobjTrainList = lobjTrainSys.FindThroughStationName(lsStationName);
                         break;
-                     // ------------ Update Employee Details -----------------
-
-                    case "4":
-                        Console.WriteLine("Enter Employee ID");
-                        string lsEmpIdUp = Console.ReadLine();
-                        lobjEmpList = lobjEmp.Find(lsEmpIdUp);
-                        if (lobjEmpList.Count == 0)
-                            Console.WriteLine("Wrong Employee Id");
-
-                        else
-                        {
-                            lobjEmp.UpdateEmplpoyeeDetail(ref lobjEmpList);
-                            Console.WriteLine("Update Successfully");
-                        }
-                        Console.ReadKey();
-                        break;
-                        // --------------- Delete Employee Record ----------------
-
-                    case "5":
-                        Console.WriteLine("Enter Employee ID");
-                        string lsEmpIdDe = Console.ReadLine();
-                        lobjEmpList = lobjEmp.Find(lsEmpIdDe);
-                        if (lobjEmpList.Count == 0)
-                            Console.WriteLine("Wrong Employee Id");
-                        else
-                        {
-                          lobjEmp.DeleteEmployeeRecord(ref lobjEmpList);
-                        }
-                        Console.WriteLine("Delete Successfully");
-                        Console.ReadKey();
-                        break;
-
 
                 }
             }
+
+
         }
     }
 }
