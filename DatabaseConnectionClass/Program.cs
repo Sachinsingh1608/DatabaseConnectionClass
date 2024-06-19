@@ -438,7 +438,7 @@ namespace DatabaseConnectionClass
         {
             for(int lncnt  = 0; lncnt < inname.Length; lncnt++)
             {
-                if ((inname[lncnt] >= 'a' && inname[lncnt] <= 'z') || (inname[lncnt] >= 'A' && inname[lncnt] <= 'Z'))
+                if ((inname[lncnt] >= 'a' && inname[lncnt] <= 'z') || (inname[lncnt] >= 'A' && inname[lncnt] <= 'Z') || inname[lncnt] == ' ')
                     continue;
                 else
                 {
@@ -514,9 +514,13 @@ namespace DatabaseConnectionClass
                 string lsChoice = Console.ReadLine();
                 switch (lsChoice)
                 {
+
+                    // --------------Exit -------------------
                     case "0":
                         lbExit = true; 
                         break;
+
+                    // --------------Add Employee -------------------
                     case "1":
                  
                         lobjEmp.ReadInput();
@@ -524,7 +528,9 @@ namespace DatabaseConnectionClass
                         Console.WriteLine("Save Successfully!");
                         Console.ReadKey();
                         break;
-                     case "2":
+                     // ------------------ List All Employee ----------------
+
+                    case "2":
                        
                         lobjEmpList = lobjEmp.List();
                         foreach( Employee lobjTempemp in lobjEmpList)
@@ -533,6 +539,8 @@ namespace DatabaseConnectionClass
                         }
                         Console.ReadKey();
                        break;
+
+                        //----------- Find Employee ---------------
 
                     case "3":
                         Console.WriteLine("Enter Employee ID");
@@ -549,6 +557,8 @@ namespace DatabaseConnectionClass
                         }
                         Console.ReadKey();
                         break;
+                     // ------------ Update Employee Details -----------------
+
                     case "4":
                         Console.WriteLine("Enter Employee ID");
                         string lsEmpIdUp = Console.ReadLine();
@@ -563,6 +573,8 @@ namespace DatabaseConnectionClass
                         }
                         Console.ReadKey();
                         break;
+                        // --------------- Delete Employee Record ----------------
+
                     case "5":
                         Console.WriteLine("Enter Employee ID");
                         string lsEmpIdDe = Console.ReadLine();
