@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -22,6 +23,41 @@ namespace DatabaseConnectionClass
         public int dept_id { get; set; }
         public string Data_File { get; set; }
 
+        
+    
+        public void DeleteEmployeeRecord(ref List<Employee> lobjEmpList)
+        {
+            
+
+            foreach (Employee lobjTempemp in lobjEmpList)
+            {
+                emp_id = lobjTempemp.emp_id;
+            }
+
+                string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
+
+            using (SqlConnection lobjCon = new SqlConnection(lsConnStr))
+            {
+                string lsQuery = "DELETE FROM EmployeeNew WHERE emp_id = " + emp_id;
+                SqlCommand cmd = new SqlCommand(lsQuery, lobjCon);
+                cmd.CommandType = System.Data.CommandType.Text;
+                try
+                {
+                    lobjCon.Open();
+                    cmd.ExecuteNonQuery();
+                    
+                    lobjCon.Close();
+                }
+                catch (SqlException Ex)
+                {
+                    Console.WriteLine(Ex.Message);
+                }
+            }
+           
+        }
+    
+
+
         public void UpdateEmplpoyeeDetail(ref List<Employee> lobjEmpList)
         {
 
@@ -42,7 +78,7 @@ namespace DatabaseConnectionClass
                 string lsLast_name = Console.ReadLine();
                 if (lsLast_name.Length != 0)
                 {
-                    last_name = lsFirst_Name;
+                    last_name = lsLast_name;
 
                 }
 
@@ -103,7 +139,7 @@ namespace DatabaseConnectionClass
 
 
 
-
+                
                 //Console.ReadKey();
             }
 
@@ -138,6 +174,7 @@ namespace DatabaseConnectionClass
             emp_id = lobj.emp_id;
             first_name = lobj.first_name;
             last_name = lobj.last_name;
+            birth_date = lobj.birth_date;
             age = lobj.age;
             sex = lobj.sex;
             age = lobj.age;
@@ -151,7 +188,9 @@ namespace DatabaseConnectionClass
         }
         public void show()
         {
-            Console.WriteLine($"name {first_name} {last_name}|Date of Birth: {birth_date} | Sex: {sex} | address: {address} |" +
+            string[] lobjTempDate = birth_date.Value.ToString().Split(' ');
+            string lstempBirth_Date = lobjTempDate[0];
+            Console.WriteLine($"Emp_d {emp_id} |Name {first_name} {last_name}|Date of Birth: {lstempBirth_Date} | Sex: {sex} | address: {address} |" +
                 $" salary: {salary} |  dept_id: {dept_id}");
            
         }
@@ -362,8 +401,7 @@ namespace DatabaseConnectionClass
             string lsQuery = "";
             using(SqlConnection lobjCon = new SqlConnection(lsConnStr))
             {
-                if(emp_id == 0)
-                {
+               
                     lsQuery = "INSERT INTO EmployeeNew (first_name,last_name,birth_date,sex,age,address" +
                         ",salary,dept_id)";
                     lsQuery += "VALUES('" + first_name + "','" + last_name + "' ,'" + ((DateTime)birth_date).ToString("dd-MMM-yyyy") + "','";
@@ -371,14 +409,14 @@ namespace DatabaseConnectionClass
                     lsQuery += sex + "'," + age.ToString() + ",'" + address + "'," + salary.ToString() + "," + dept_id.ToString() + ")";
             
                         
-                }
+                
 
-                else
-                {
-                    lsQuery = "UPDATE EmployeeNew SET  first_name = '"+first_name + "',last_name='"+last_name + "',birth_date='"+((DateTime)birth_date).ToString("dd-MMM-yyyy")+ "','";
-                    lsQuery += "sex='" + sex + "',age=" + age.ToString() + ",address ='" + address + ",salary=" + salary.ToString() + ",dept_id='" + dept_id.ToString() + ")";
-                    lsQuery += "WHERE  emp_id = " + emp_id.ToString();
-                }
+                //else
+                //{
+                //    lsQuery = "UPDATE EmployeeNew SET  first_name = '"+first_name + "',last_name='"+last_name + "',birth_date='"+((DateTime)birth_date).ToString("dd-MMM-yyyy")+ "','";
+                //    lsQuery += "sex='" + sex + "',age=" + age.ToString() + ",address ='" + address + ",salary=" + salary.ToString() + ",dept_id='" + dept_id.ToString() + ")";
+                //    lsQuery += "WHERE  emp_id = " + emp_id.ToString();
+                //}
 
 
                 SqlCommand cmd = new SqlCommand(lsQuery, lobjCon);
@@ -465,12 +503,15 @@ namespace DatabaseConnectionClass
             bool lbExit = false;
             while(!lbExit)
             {
-                Console.WriteLine("Enter Exit 0");
+                Console.Clear();
+                Console.WriteLine("Enter 0 Exit ");
                 Console.WriteLine("Enter 1 Add Employee ");
                 Console.WriteLine("Enter 2 list Employee ");
                 Console.WriteLine("Enter 3 Find Employee ");
                 Console.WriteLine("Enter 4 Update Employee");
-              string lsChoice = Console.ReadLine();
+                Console.WriteLine("Enter 5 Delete Employee Record ");
+
+                string lsChoice = Console.ReadLine();
                 switch (lsChoice)
                 {
                     case "0":
@@ -480,6 +521,8 @@ namespace DatabaseConnectionClass
                  
                         lobjEmp.ReadInput();
                         lobjEmp.Save();
+                        Console.WriteLine("Save Successfully!");
+                        Console.ReadKey();
                         break;
                      case "2":
                        
@@ -488,6 +531,7 @@ namespace DatabaseConnectionClass
                         {
                             lobjTempemp.show();
                         }
+                        Console.ReadKey();
                        break;
 
                     case "3":
@@ -503,6 +547,7 @@ namespace DatabaseConnectionClass
                                 lobjTempemp.show();
                             }
                         }
+                        Console.ReadKey();
                         break;
                     case "4":
                         Console.WriteLine("Enter Employee ID");
@@ -514,7 +559,22 @@ namespace DatabaseConnectionClass
                         else
                         {
                             lobjEmp.UpdateEmplpoyeeDetail(ref lobjEmpList);
+                            Console.WriteLine("Update Successfully");
                         }
+                        Console.ReadKey();
+                        break;
+                    case "5":
+                        Console.WriteLine("Enter Employee ID");
+                        string lsEmpIdDe = Console.ReadLine();
+                        lobjEmpList = lobjEmp.find(lsEmpIdDe);
+                        if (lobjEmpList.Count == 0)
+                            Console.WriteLine("Wrong Employee Id");
+                        else
+                        {
+                          lobjEmp.DeleteEmployeeRecord(ref lobjEmpList);
+                        }
+                        Console.WriteLine("Delete Successfully");
+                        Console.ReadKey();
                         break;
 
 
