@@ -293,7 +293,7 @@ namespace DatabaseConnectionClass
             return lobjEmpList;
         }
 
-        public List<Employee> find(string inEmpId)
+        public List<Employee> Find(string inEmpId)
         {
 
             List<Employee> lobjEmpList = new List<Employee>();
@@ -394,7 +394,7 @@ namespace DatabaseConnectionClass
             }
             return lobjEmpList;
         }
-       public bool Save()
+        public bool Save()
         {
             string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
 
@@ -434,7 +434,7 @@ namespace DatabaseConnectionClass
             }
             return true;
         }
-        public bool checkValidName(string inname)
+        public bool CheckValidName(string inname)
         {
             for(int lncnt  = 0; lncnt < inname.Length; lncnt++)
             {
@@ -454,13 +454,13 @@ namespace DatabaseConnectionClass
             do {
                 Console.WriteLine("First Name");
                 first_name = Console.ReadLine();
-            }while(!checkValidName(first_name));
+            }while(!CheckValidName(first_name));
 
 
             do {
                 Console.WriteLine("Last Name");
                 last_name = Console.ReadLine();
-            }while(!checkValidName(last_name));
+            }while(!CheckValidName(last_name));
 
 
 
@@ -537,7 +537,7 @@ namespace DatabaseConnectionClass
                     case "3":
                         Console.WriteLine("Enter Employee ID");
                         string lsEmpId = Console.ReadLine();
-                        lobjEmpList = lobjEmp.find(lsEmpId);
+                        lobjEmpList = lobjEmp.Find(lsEmpId);
                         if (lobjEmpList.Count == 0)
                             Console.WriteLine("Wrong Employee Id");
                         else
@@ -552,7 +552,7 @@ namespace DatabaseConnectionClass
                     case "4":
                         Console.WriteLine("Enter Employee ID");
                         string lsEmpIdUp = Console.ReadLine();
-                        lobjEmpList = lobjEmp.find(lsEmpIdUp);
+                        lobjEmpList = lobjEmp.Find(lsEmpIdUp);
                         if (lobjEmpList.Count == 0)
                             Console.WriteLine("Wrong Employee Id");
 
@@ -566,7 +566,7 @@ namespace DatabaseConnectionClass
                     case "5":
                         Console.WriteLine("Enter Employee ID");
                         string lsEmpIdDe = Console.ReadLine();
-                        lobjEmpList = lobjEmp.find(lsEmpIdDe);
+                        lobjEmpList = lobjEmp.Find(lsEmpIdDe);
                         if (lobjEmpList.Count == 0)
                             Console.WriteLine("Wrong Employee Id");
                         else
