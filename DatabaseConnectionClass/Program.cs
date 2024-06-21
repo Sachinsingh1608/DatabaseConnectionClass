@@ -409,18 +409,6 @@ namespace DatabaseConnectionClass
                     lsQuery += "VALUES('" + first_name + "','" + last_name + "' ,'" + ((DateTime)birth_date).ToString("dd-MMM-yyyy") + "','";
 
                     lsQuery += sex + "'," + age.ToString() + ",'" + address + "'," + salary.ToString() + "," + dept_id.ToString() + ")";
-            
-                        
-                
-
-                //else
-                //{
-                //    lsQuery = "UPDATE EmployeeNew SET  first_name = '"+first_name + "',last_name='"+last_name + "',birth_date='"+((DateTime)birth_date).ToString("dd-MMM-yyyy")+ "','";
-                //    lsQuery += "sex='" + sex + "',age=" + age.ToString() + ",address ='" + address + ",salary=" + salary.ToString() + ",dept_id='" + dept_id.ToString() + ")";
-                //    lsQuery += "WHERE  emp_id = " + emp_id.ToString();
-                //}
-
-
                 SqlCommand cmd = new SqlCommand(lsQuery, lobjCon);
                     cmd.CommandType = System.Data.CommandType.Text;
                 try
@@ -598,55 +586,78 @@ namespace DatabaseConnectionClass
 
             bool lbExit = false;
             List<TrainSystem> lobjTrainList = new List<TrainSystem>();
+            List<Station> lobjStationList = new List<Station>();
             TrainSystem lobjTrainSys = new TrainSystem();
+            Station lobjStation = new Station();
 
-            while(!lbExit) 
+            while (!lbExit) 
             {
-                Console.WriteLine("Enter 1 Add Train");
-                Console.WriteLine("Enter 2 Find Running Trains In Station");
-                Console.WriteLine("Enter 3 Find Train With Train No");
+                Console.WriteLine("Enter 1 Add");
+                Console.WriteLine("Enter 2 List ");
+                Console.WriteLine("Enter 3 Find");
                 string lsChoice = Console.ReadLine();
 
                 switch (lsChoice)
                 {
                     case "1":
-                        lobjTrainSys.ReadInput();
-                        lobjTrainSys.Save();
+                        Console.WriteLine("Enter 1 Add For Train");
+                        Console.WriteLine("Enter 2 Add For Station ");
+                        string lschoiceAdd = Console.ReadLine();
+                        switch (lschoiceAdd)
+                        {
+                            case "1":
+                                lobjTrainSys.ReadInput();
+                                lobjTrainSys.Save();
+                                break;
+                            case "2":
+                                lobjStation.ReadInput();
+                                lobjStation.Save();
+                                break;
+
+                        }
                         break;
                     case "2":
-                        List<string> lobjName = new List<string>();
-                        lobjName = lobjTrainSys.ListStation();
-                        Console.WriteLine("-----Station Name -----------------");
-                        foreach(string lobjTempList in lobjName)
+                        Console.WriteLine("Enter 1 List For Trains");
+                        Console.WriteLine("Enter 2 List For Stations ");
+                        string lschoiceList = Console.ReadLine();
+                        switch (lschoiceList)
                         {
-                            Console.WriteLine(lobjTempList);
-                        }
+                            case "1":
+                                lobjTrainList=lobjTrainSys.ListOfTrain();
+                                foreach(TrainSystem lobjtrainList  in lobjTrainList)
+                                {
+                                    lobjtrainList.Show();
+                                }
+                                Console.ReadKey();
+                                break;
+                            case "2":
+                                lobjStationList = lobjStation.ListOfStation();
+                                foreach (Station lobjstation in lobjStationList)
+                                {
+                                    lobjstation.Show();
+                                }
+                                Console.ReadKey();
+                                break;
+                              
 
-                        Console.WriteLine("Enter A Station Name");
-                        string lsStationName = Console.ReadLine();
-                        List<TrainSystem> lobjTrainListtemp = new List<TrainSystem>();
-                        lobjTrainListtemp = lobjTrainSys.FindThroughStationName(lsStationName);
-
-                        foreach(TrainSystem lobjTempList in lobjTrainListtemp)
-                        {
-                            lobjTempList.Show();
                         }
                         break;
-                    case "3":
+                      
+                        //case "3":
 
-                        Console.WriteLine("Enter A Train Number");
-                        string lsTrainNum = Console.ReadLine();
+                        //    Console.WriteLine("Enter A Train Number");
+                        //    string lsTrainNum = Console.ReadLine();
 
-                        List<TrainSystem> lobjTrainListNum = new List<TrainSystem>();
-                        lobjTrainListNum = lobjTrainSys.FindTrainThroughTrainNum(lsTrainNum);
+                        //    List<TrainSystem> lobjTrainListNum = new List<TrainSystem>();
+                        //    lobjTrainListNum = lobjTrainSys.FindTrainThroughTrainNum(lsTrainNum);
 
-                        foreach (TrainSystem lobjTempList in lobjTrainListNum)
-                        {
-                            lobjTempList.Show();
-                        }
+                        //    foreach (TrainSystem lobjTempList in lobjTrainListNum)
+                        //    {
+                        //        lobjTempList.Show();
+                        //    }
 
 
-                     break;
+                        // break;
 
                 }
             }
