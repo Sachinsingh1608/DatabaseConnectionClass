@@ -603,6 +603,8 @@ namespace DatabaseConnectionClass
             while(!lbExit) 
             {
                 Console.WriteLine("Enter 1 Add Train");
+                Console.WriteLine("Enter 2 Find Running Trains In Station");
+                Console.WriteLine("Enter 3 Find Train With Train No");
                 string lsChoice = Console.ReadLine();
 
                 switch (lsChoice)
@@ -612,17 +614,39 @@ namespace DatabaseConnectionClass
                         lobjTrainSys.Save();
                         break;
                     case "2":
-                        lobjTrainList= lobjTrainSys.ListStation();
+                        List<string> lobjName = new List<string>();
+                        lobjName = lobjTrainSys.ListStation();
                         Console.WriteLine("-----Station Name -----------------");
-                        foreach(TrainSystem lobjTempList in lobjTrainList)
+                        foreach(string lobjTempList in lobjName)
                         {
-                            Console.WriteLine(lobjTempList.station);
+                            Console.WriteLine(lobjTempList);
                         }
 
                         Console.WriteLine("Enter A Station Name");
                         string lsStationName = Console.ReadLine();
-                        lobjTrainList = lobjTrainSys.FindThroughStationName(lsStationName);
+                        List<TrainSystem> lobjTrainListtemp = new List<TrainSystem>();
+                        lobjTrainListtemp = lobjTrainSys.FindThroughStationName(lsStationName);
+
+                        foreach(TrainSystem lobjTempList in lobjTrainListtemp)
+                        {
+                            lobjTempList.Show();
+                        }
                         break;
+                    case "3":
+
+                        Console.WriteLine("Enter A Train Number");
+                        string lsTrainNum = Console.ReadLine();
+
+                        List<TrainSystem> lobjTrainListNum = new List<TrainSystem>();
+                        lobjTrainListNum = lobjTrainSys.FindTrainThroughTrainNum(lsTrainNum);
+
+                        foreach (TrainSystem lobjTempList in lobjTrainListNum)
+                        {
+                            lobjTempList.Show();
+                        }
+
+
+                     break;
 
                 }
             }
