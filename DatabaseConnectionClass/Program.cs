@@ -587,14 +587,17 @@ namespace DatabaseConnectionClass
             bool lbExit = false;
             List<TrainSystem> lobjTrainList = new List<TrainSystem>();
             List<Station> lobjStationList = new List<Station>();
+            List<Schedule> lobjScheduleList = new List<Schedule>();
             TrainSystem lobjTrainSys = new TrainSystem();
             Station lobjStation = new Station();
+            Schedule lobjSchedule = new Schedule();
 
             while (!lbExit) 
             {
                 Console.WriteLine("Enter 1 Add");
                 Console.WriteLine("Enter 2 List ");
-                Console.WriteLine("Enter 3 Find");
+                Console.WriteLine("Enter 3 Update");
+                Console.WriteLine("Enter 4 Delete");
                 string lsChoice = Console.ReadLine();
 
                 switch (lsChoice)
@@ -602,16 +605,27 @@ namespace DatabaseConnectionClass
                     case "1":
                         Console.WriteLine("Enter 1 Add For Train");
                         Console.WriteLine("Enter 2 Add For Station ");
+                        Console.WriteLine("Enter 3 Add For Schedule");
                         string lschoiceAdd = Console.ReadLine();
                         switch (lschoiceAdd)
                         {
                             case "1":
                                 lobjTrainSys.ReadInput();
                                 lobjTrainSys.Save();
+                                Console.WriteLine("Add Successfully");
+                                Console.ReadKey();
                                 break;
                             case "2":
                                 lobjStation.ReadInput();
                                 lobjStation.Save();
+                                Console.WriteLine("Add Successfully");
+                                Console.ReadKey();
+                                break;
+                            case"3":
+                                lobjSchedule.ReadInput();
+                                lobjSchedule.Save();
+                                Console.WriteLine("Add Successfully");
+                                Console.ReadKey();
                                 break;
 
                         }
@@ -619,6 +633,7 @@ namespace DatabaseConnectionClass
                     case "2":
                         Console.WriteLine("Enter 1 List For Trains");
                         Console.WriteLine("Enter 2 List For Stations ");
+                        Console.WriteLine("Enetr 3 List Schedule");
                         string lschoiceList = Console.ReadLine();
                         switch (lschoiceList)
                         {
@@ -629,6 +644,8 @@ namespace DatabaseConnectionClass
                                     lobjtrainList.Show();
                                 }
                                 Console.ReadKey();
+                            
+                        
                                 break;
                             case "2":
                                 lobjStationList = lobjStation.ListOfStation();
@@ -638,26 +655,97 @@ namespace DatabaseConnectionClass
                                 }
                                 Console.ReadKey();
                                 break;
+                            case "3":
+
+                                lobjScheduleList = lobjSchedule.ListOfSchedule();
+                                foreach (Schedule lobjschedule in lobjScheduleList)
+                                {
+                                    lobjSchedule.Show();
+                                }
+                                break;
                               
 
                         }
                         break;
-                      
-                        //case "3":
 
-                        //    Console.WriteLine("Enter A Train Number");
-                        //    string lsTrainNum = Console.ReadLine();
+                    case "3":
 
-                        //    List<TrainSystem> lobjTrainListNum = new List<TrainSystem>();
-                        //    lobjTrainListNum = lobjTrainSys.FindTrainThroughTrainNum(lsTrainNum);
+                        Console.WriteLine("Enter 1 Update For Trains");
+                        Console.WriteLine("Enter 2 Upadate For Stations ");
+                        Console.WriteLine("Enter 2 Update For Schedule ");
+                        string lschoiceFind = Console.ReadLine();
+                        switch (lschoiceFind)
+                        {
+                            case "1":
+                                Console.WriteLine("Enter a Train Number");
+                                string lsTrainNo = Console.ReadLine();
+                                lobjTrainList = lobjTrainSys.FindTrain(lsTrainNo);
+                                lobjTrainSys.UpadateTrainDetails(ref lobjTrainList);
+                                Console.WriteLine(" Update Successfully");
+                                Console.ReadKey();
+                                break;
+                            case "2":
+                                Console.WriteLine("Enter a Station Code");
+                                string lsStnCode = Console.ReadLine();
 
-                        //    foreach (TrainSystem lobjTempList in lobjTrainListNum)
-                        //    {
-                        //        lobjTempList.Show();
-                        //    }
+                                lobjStationList = lobjStation.FindStation(lsStnCode);
+                                lobjStation.UpdateStationRecord(ref lobjStationList);
+                                Console.WriteLine(" Update Successfully");
+                                Console.ReadKey();
+                                break;
+                            case "3":
+                                Console.WriteLine("Enter a Stn Code");
+                                string lsStnCode1 = Console.ReadLine();
+                                lobjScheduleList = lobjSchedule.FindSchedule(lsStnCode1);
+                                lobjSchedule.UpdateScheduleRecord(ref lobjScheduleList);
+                                Console.WriteLine(" Update Successfully");
+                                Console.ReadKey();
+                                break;
 
+                        }
 
-                        // break;
+                        break;
+
+                    case "4":
+
+                        Console.WriteLine("Enter 1 Delete For Trains");
+                        Console.WriteLine("Enter 2 Delete For Stations ");
+                        Console.WriteLine("Enter 3 Delete For Schedule ");
+                        string lschoiceDel = Console.ReadLine();
+                        switch (lschoiceDel)
+                        {
+                            case "1":
+                                Console.WriteLine("Enter a Train Number");
+                                string lsTrainNo = Console.ReadLine();
+                                lobjTrainList = lobjTrainSys.FindTrain(lsTrainNo);
+                                lobjTrainSys.DeleteTrainRecord(ref lobjTrainList);
+                                Console.WriteLine(" Delete  Successfully");
+                                Console.ReadKey();
+                                break;
+
+                            case "2":
+
+                                Console.WriteLine("Enter a Station Code");
+                                string lsStnCode = Console.ReadLine();
+
+                                lobjStationList = lobjStation.FindStation(lsStnCode);
+                                lobjStation.DeleteStationRecord(ref lobjStationList);
+                                Console.WriteLine(" Delete  Successfully");
+                                Console.ReadKey();
+                                break;
+                            case "3":
+                                Console.WriteLine("Enter a Station Code");
+                                string lsStnCode1 = Console.ReadLine();
+
+                                lobjScheduleList = lobjSchedule.FindSchedule(lsStnCode1);
+                                lobjSchedule.DeleteScheduleRecord(ref lobjScheduleList);
+                                Console.WriteLine(" Delete  Successfully");
+                                Console.ReadKey();
+                                break;
+
+                        }
+
+                        break;
 
                 }
             }
