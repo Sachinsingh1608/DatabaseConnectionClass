@@ -241,11 +241,37 @@ namespace DatabaseConnectionClass
             }
             return lobjScheduleList;
         }
+        private bool IsTrainNumberExists(int trainNo)
+        {
+            string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
+            string lsQuery = "SELECT dbo.CheckTrainNumberInSchedule(@TrainNo)";
+
+            using (SqlConnection lobjCon = new SqlConnection(lsConnStr))
+            using (SqlCommand cmd = new SqlCommand(lsQuery, lobjCon))
+            {
+                cmd.Parameters.AddWithValue("@TrainNo", trainNo);
+
+                try
+                {
+                    lobjCon.Open();
+                    return (bool)cmd.ExecuteScalar();
+                }
+                catch (SqlException Ex)
+                {
+                    Console.WriteLine(Ex.Message);
+                    return false;
+                }
+            }
+        }
 
         public bool Save()
         {
             string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
-
+            if (IsTrainNumberExists(TrainNo))
+            {
+                Console.WriteLine("Train number already exists.");
+                return false;
+            }
             string lsQuery = "";
             using (SqlConnection lobjCon = new SqlConnection(lsConnStr))
             {
@@ -710,9 +736,36 @@ namespace DatabaseConnectionClass
             Console.WriteLine($" StnName : {StnName} | StnCode : {StnCode} | StnName : {StnName} | NoOfPlatForm : {NoOfPlatForm}" +
                 $" | Address : {Address} | State : {State} | City : {City} | StationMaster : {StationMaster} | StationMasterMobNo : {StationMasterMobNo} | Juntion : {Juntion}");
         }
+        private bool IsTrainNumberExists(int StnCode)
+        {
+            string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
+            string lsQuery = "SELECT dbo.CheckStationCode(@Stncode)";
+
+            using (SqlConnection lobjCon = new SqlConnection(lsConnStr))
+            using (SqlCommand cmd = new SqlCommand(lsQuery, lobjCon))
+            {
+                cmd.Parameters.AddWithValue("@Stncode", StnCode);
+
+                try
+                {
+                    lobjCon.Open();
+                    return (bool)cmd.ExecuteScalar();
+                }
+                catch (SqlException Ex)
+                {
+                    Console.WriteLine(Ex.Message);
+                    return false;
+                }
+            }
+        }
         public bool Save()
         {
 
+            if (IsTrainNumberExists(StnCode))
+            {
+                Console.WriteLine("Station Code Already Exist");
+                return false;
+            }
             string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
 
             string lsQuery = "";
@@ -986,7 +1039,73 @@ namespace DatabaseConnectionClass
             }
             return true;
         }
-        public  List<TrainSystem> FindTrain(string inTrainNo)
+        private bool IsTrainNumberExists(int trainNo)
+        {
+            string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
+            string lsQuery = "SELECT dbo.CheckTrainNumber(@TrainNo)";
+
+            using (SqlConnection lobjCon = new SqlConnection(lsConnStr))
+            using (SqlCommand cmd = new SqlCommand(lsQuery, lobjCon))
+            {
+                cmd.Parameters.AddWithValue("@TrainNo", trainNo);
+
+                try
+                {
+                    lobjCon.Open();
+                    return (bool)cmd.ExecuteScalar();
+                }
+                catch (SqlException Ex)
+                {
+                    Console.WriteLine(Ex.Message);
+                    return false;
+                }
+            }
+        }
+
+        public bool NewSave()
+        {
+            string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
+
+            // Check if the train number exists
+            if (IsTrainNumberExists(Train_No))
+            {
+                Console.WriteLine("Train number already exists.");
+                return false;
+            }
+
+            string lsQuery = "INSERT INTO TRAIN (TrainNo, TrainType, TrainName, StartStn, TerminStn, FirstAcNo, SecondAcNo, SleeperNo, General) " +
+                             "VALUES (@TrainNo, @TrainType, @TrainName, @StartStn, @TerminStn, @FirstAcNo, @SecondAcNo, @SleeperNo, @General)";
+
+            using (SqlConnection lobjCon = new SqlConnection(lsConnStr))
+            using (SqlCommand cmd = new SqlCommand(lsQuery, lobjCon))
+            {
+                cmd.Parameters.AddWithValue("@TrainNo", Train_No);
+                cmd.Parameters.AddWithValue("@TrainType", TrainType);
+                cmd.Parameters.AddWithValue("@TrainName", TrainName);
+                cmd.Parameters.AddWithValue("@StartStn", StartStn);
+                cmd.Parameters.AddWithValue("@TerminStn", TerminStn);
+                cmd.Parameters.AddWithValue("@FirstAcNo", FirstAcNo);
+                cmd.Parameters.AddWithValue("@SecondAcNo", SecondAcNo);
+                cmd.Parameters.AddWithValue("@SleeperNo", SleeperNo);
+                cmd.Parameters.AddWithValue("@General", General);
+
+                try
+                {
+                    lobjCon.Open();
+                    cmd.ExecuteNonQuery();
+                    lobjCon.Close();
+                }
+                catch (SqlException Ex)
+                {
+                    Console.WriteLine(Ex.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+        public List<TrainSystem> FindTrain(string inTrainNo)
         {
             List<TrainSystem> lobjTrainList = new List<TrainSystem>();
 
@@ -1143,111 +1262,7 @@ namespace DatabaseConnectionClass
             }
             return lobjTrainList;
         }
-        //public List<TrainSystem> FindTrainThroughTrainNum(string InTrainNum)
-        //{
-        //    List<TrainSystem> lobjTrainList = new List<TrainSystem>();
-
-        //    string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
-        //    using (SqlConnection lobjconn = new SqlConnection(lsConnStr))
-        //    {
-        //        string lsQuery = "SELECT trainNo,TrainName,station,Schedule FROM Irctc  Where trainNo = " + InTrainNum ;
-
-        //        SqlCommand cmd = new SqlCommand(lsQuery, lobjconn);
-        //        cmd.CommandType = System.Data.CommandType.Text;
-        //        lobjconn.Open();
-        //        using (SqlDataReader lobjSDR = cmd.ExecuteReader())
-        //        {
-        //            if (lobjSDR.HasRows)
-        //            {
-        //                while (lobjSDR.Read())
-        //                {
-        //                    train_No = (int)lobjSDR[0];
-
-
-        //                    if (DBNull.Value.Equals(lobjSDR[1]))
-        //                    {
-        //                        TrainName = "";
-        //                    }
-        //                    else
-        //                    {
-        //                        TrainName = lobjSDR[1].ToString();
-        //                    }
-
-        //                    if (DBNull.Value.Equals(lobjSDR[2]))
-        //                    {
-        //                        station = "";
-        //                    }
-        //                    else
-        //                    {
-        //                        station = lobjSDR[2].ToString();
-        //                    }
-
-
-
-        //                    if (DBNull.Value.Equals(lobjSDR[3]))
-        //                    {
-        //                        Schedule = null;
-        //                    }
-        //                    else
-        //                    {
-        //                        Schedule = (TimeSpan)lobjSDR[3];
-        //                    }
-
-
-
-
-        //                    lobjTrainList.Add(new TrainSystem(this));
-        //                }
-        //            }
-        //        }
-        //        lobjconn.Close();
-        //    }
-        //    return lobjTrainList;
-        //}
-        //public List<string> ListStation()
-        //{
-
-        //    List<string> lobjTrainList = new List<string>();
-
-        //    string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
-        //    using (SqlConnection lobjconn = new SqlConnection(lsConnStr))
-        //    {
-        //        string lsQuery = "SELECT  station FROM Irctc GROUP BY station ";
-
-        //        SqlCommand cmd = new SqlCommand(lsQuery, lobjconn);
-        //        cmd.CommandType = System.Data.CommandType.Text;
-        //        lobjconn.Open();
-        //        using (SqlDataReader lobjSDR = cmd.ExecuteReader())
-        //        {
-        //            if (lobjSDR.HasRows)
-        //            {
-        //                while (lobjSDR.Read())
-        //                {
-
-
-
-        //                    if (DBNull.Value.Equals(lobjSDR[0]))
-        //                    {
-        //                        TrainName = "";
-        //                    }
-        //                    else
-        //                    {
-        //                        TrainName = lobjSDR[0].ToString();
-        //                    }
-
-
-
-
-
-        //                    lobjTrainList.Add(TrainName);
-        //                }
-        //            }
-        //        }
-        //        lobjconn.Close();
-        //    }
-        //    return lobjTrainList;
-
-        //}
+      
 
     }
 

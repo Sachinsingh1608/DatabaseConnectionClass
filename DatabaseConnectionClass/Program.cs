@@ -424,6 +424,7 @@ namespace DatabaseConnectionClass
             }
             return true;
         }
+
         public bool CheckValidName(string inname)
         {
             for(int lncnt  = 0; lncnt < inname.Length; lncnt++)
@@ -594,6 +595,7 @@ namespace DatabaseConnectionClass
 
             while (!lbExit) 
             {
+                Console.Clear();
                 Console.WriteLine("Enter 1 Add");
                 Console.WriteLine("Enter 2 List ");
                 Console.WriteLine("Enter 3 Update");
@@ -611,20 +613,27 @@ namespace DatabaseConnectionClass
                         {
                             case "1":
                                 lobjTrainSys.ReadInput();
-                                lobjTrainSys.Save();
-                                Console.WriteLine("Add Successfully");
+                                if(lobjTrainSys.NewSave() == true)
+                                    Console.WriteLine("Add Successfully");
+                                else
+                                    Console.WriteLine(" Not Add Successfully");
                                 Console.ReadKey();
                                 break;
                             case "2":
                                 lobjStation.ReadInput();
-                                lobjStation.Save();
+                                if(lobjStation.Save() == true)
+
                                 Console.WriteLine("Add Successfully");
+                                else
+                                    Console.WriteLine(" Not Add Successfully");
                                 Console.ReadKey();
                                 break;
                             case"3":
                                 lobjSchedule.ReadInput();
-                                lobjSchedule.Save();
-                                Console.WriteLine("Add Successfully");
+                                if(lobjSchedule.Save() == true)
+                                    Console.WriteLine("Add Successfully");
+                                else
+                                    Console.WriteLine(" Not Add Successfully");
                                 Console.ReadKey();
                                 break;
 
