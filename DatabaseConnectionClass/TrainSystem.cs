@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Net;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DatabaseConnectionClass
 {
@@ -15,22 +11,92 @@ namespace DatabaseConnectionClass
         public int StnCode { get; set; }
         public TimeSpan ArrTime { get; set; }
         public TimeSpan DeptTime { get; set; }
+        public int Sequence { get; set; }
 
-      public Schedule()
+        public Schedule()
         {
 
         }
 
         public void Show()
         {
-            Console.WriteLine("TrainNo " + TrainNo + " | " + "StnCode" + StnCode + " | " + "ArrTime" + ArrTime + " | " + "DeptTime" + DeptTime);
+            Console.WriteLine("TrainNo:- " + TrainNo + " | " + "StnCode:-" + StnCode + " | " + "ArrTime:-" + ArrTime + " | " + "DeptTime:-" + DeptTime + " | " + "Sequence:- " + Sequence);
         }
+
+        public void VerifyTrainSchedule(int inTrainNo)
+        {
+
+            string lbcheckOne = "";
+            string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
+            string lsQuery = "SELECT dbo.CheckOnePresent(@TrainNo)";
+
+            using (SqlConnection lobjCon = new SqlConnection(lsConnStr))
+            using (SqlCommand cmd = new SqlCommand(lsQuery, lobjCon))
+            {
+                cmd.Parameters.AddWithValue("@TrainNo", inTrainNo);
+
+                try
+                {
+                    lobjCon.Open();
+                    lbcheckOne = cmd.ExecuteScalar().ToString();
+
+                }
+                catch (SqlException Ex)
+                {
+                    Console.WriteLine(Ex.Message);
+
+                }
+
+
+                Console.WriteLine(lbcheckOne);
+
+            }
+
+            Console.WriteLine("Duplicate Sequence Number");
+            List<Schedule> lobjlist = new List<Schedule>();
+            lobjlist = ListOfSchedule();
+
+            int[] lobjSeq = new int[20];
+            List<int> lobjDup = new List<int>();
+            foreach (Schedule lobjTemp in lobjlist)
+            {
+                lobjSeq[lobjTemp.Sequence]++;
+            }
+
+            for(int lncnt=0; lncnt<20; lncnt++)
+            {
+                if (lobjSeq[lncnt] > 1)
+                {
+                    lobjDup.Add(lncnt);
+                }
+            }
+          
+
+            for(int lncnt=0;lncnt< lobjDup.Count; lncnt++)
+            {
+                int lnSeqNum = lobjDup[lncnt];
+                
+                foreach (Schedule lobjschedule in lobjlist)
+                {
+                    if(lobjschedule.Sequence == lnSeqNum)
+                    {
+                        
+                        lobjschedule.Show();
+                    }
+                }
+            }
+            Console.ReadKey();
+
+        }
+    
+       
       public Schedule(Schedule lobjSchedule)
         {
             TrainNo = lobjSchedule.TrainNo;
             StnCode = lobjSchedule.StnCode;
             ArrTime = lobjSchedule.ArrTime;
             DeptTime = lobjSchedule.DeptTime;
+            Sequence = lobjSchedule.Sequence;
         }
         public void DeleteScheduleRecord(ref List<Schedule> inlobjScheduleLIst)
         {
@@ -91,6 +157,13 @@ namespace DatabaseConnectionClass
                     DeptTime = TimeSpan.Parse(lsdept);
                 }
 
+                Console.WriteLine("Old Sequence Number :" + lobjScheduleTemp.Sequence);
+                Console.WriteLine("Enter a Train Number");
+                string lsSeqNum = Console.ReadLine();
+                if (lsTrainNum.Length != 0)
+                {
+                    TrainNo = int.Parse(lsSeqNum);
+                }
 
 
             }
@@ -102,7 +175,7 @@ namespace DatabaseConnectionClass
             {
                 lsQuery = "UPDATE Schedule SET  TrainNo=" + TrainNo + ",ArrTime='" + ArrTime +
                      "',";
-                lsQuery += "DeptTime='" + DeptTime + "'"+"where StnCode = "+StnCode.ToString();
+                lsQuery += "DeptTime='" + DeptTime + "'"+"where StnCode = "+StnCode.ToString()+ ", Sequence = "+Sequence;
 
                 SqlCommand cmd = new SqlCommand(lsQuery, lobjCon);
                 cmd.CommandType = System.Data.CommandType.Text;
@@ -133,7 +206,7 @@ namespace DatabaseConnectionClass
             using (SqlConnection lobjconn = new SqlConnection(lsConnStr))
             {
 
-                string lsQuery = "SELECT TrainNo,StnCode,ArrTime,DeptTime from Schedule where StnCode="+ inStnCode;
+                string lsQuery = "SELECT TrainNo,StnCode,ArrTime,DeptTime,sequence from Schedule where StnCode="+ inStnCode;
 
                 SqlCommand cmd = new SqlCommand(lsQuery, lobjconn);
                 cmd.CommandType = System.Data.CommandType.Text;
@@ -166,7 +239,7 @@ namespace DatabaseConnectionClass
                             DeptTime = (TimeSpan)lobjSDR[3];
 
 
-
+                            Sequence = (int)(lobjSDR[4]);
 
                             lobjScheduleList.Add(new Schedule(this));
                         }
@@ -175,7 +248,7 @@ namespace DatabaseConnectionClass
                 lobjconn.Close();
             }
             return lobjScheduleList;
-        }
+        } 
         public void ReadInput()
         {
             Console.WriteLine("Enter a Train Number");
@@ -188,7 +261,10 @@ namespace DatabaseConnectionClass
             ArrTime = TimeSpan.Parse(Console.ReadLine());
 
             Console.WriteLine("Enter a Dept Time");
-            DeptTime= TimeSpan.Parse(Console.ReadLine());   
+            DeptTime= TimeSpan.Parse(Console.ReadLine());
+
+            Console.WriteLine("Enter a Sequence Number");
+            Sequence = int.Parse(Console.ReadLine());
         }
         public List<Schedule> ListOfSchedule()
         {
@@ -198,7 +274,7 @@ namespace DatabaseConnectionClass
             using (SqlConnection lobjconn = new SqlConnection(lsConnStr))
             {
          
-                string lsQuery = "SELECT TrainNo,StnCode,ArrTime,DeptTime from Schedule";
+                string lsQuery = "SELECT TrainNo,StnCode,ArrTime,DeptTime,Sequence from Schedule";
 
                 SqlCommand cmd = new SqlCommand(lsQuery, lobjconn);
                 cmd.CommandType = System.Data.CommandType.Text;
@@ -229,8 +305,8 @@ namespace DatabaseConnectionClass
                             //}
                            
                                 DeptTime = (TimeSpan)lobjSDR[3];
-                           
 
+                            Sequence = (int)(lobjSDR[4]);
 
 
                             lobjScheduleList.Add(new Schedule(this));
@@ -267,17 +343,13 @@ namespace DatabaseConnectionClass
         public bool Save()
         {
             string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
-            if (IsTrainNumberExists(TrainNo))
-            {
-                Console.WriteLine("Train number already exists.");
-                return false;
-            }
+          
             string lsQuery = "";
             using (SqlConnection lobjCon = new SqlConnection(lsConnStr))
             {
 
-                lsQuery = "INSERT INTO Schedule (TrainNo,StnCode,ArrTime,DeptTime)";
-                lsQuery += "VALUES("+ TrainNo + "," + StnCode + " ,'" + ArrTime + "','" + DeptTime + "'" + ")"; ;
+                lsQuery = "INSERT INTO Schedule (TrainNo,StnCode,ArrTime,DeptTime,sequence)";
+                lsQuery += "VALUES("+ TrainNo + "," + StnCode + " ,'" + ArrTime + "','" + DeptTime + "'," +Sequence+ ")"; ;
 
 
 
@@ -1062,7 +1134,7 @@ namespace DatabaseConnectionClass
             }
         }
 
-        public bool NewSave()
+          public bool NewSave()
         {
             string lsConnStr = "Integrated Security=SSPI; Persist Security Info=False; Initial Catalog=C#Training; Data Source=LAPTOP-LFHQRLA5\\SQLEXPRESS";
 

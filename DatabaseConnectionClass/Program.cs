@@ -600,6 +600,7 @@ namespace DatabaseConnectionClass
                 Console.WriteLine("Enter 2 List ");
                 Console.WriteLine("Enter 3 Update");
                 Console.WriteLine("Enter 4 Delete");
+                Console.WriteLine("Enter 5 Verify Sequence");
                 string lsChoice = Console.ReadLine();
 
                 switch (lsChoice)
@@ -621,11 +622,14 @@ namespace DatabaseConnectionClass
                                 break;
                             case "2":
                                 lobjStation.ReadInput();
+
                                 if(lobjStation.Save() == true)
 
                                 Console.WriteLine("Add Successfully");
                                 else
                                     Console.WriteLine(" Not Add Successfully");
+
+
                                 Console.ReadKey();
                                 break;
                             case"3":
@@ -671,6 +675,7 @@ namespace DatabaseConnectionClass
                                 {
                                     lobjSchedule.Show();
                                 }
+                                Console.ReadKey();
                                 break;
                               
 
@@ -754,6 +759,12 @@ namespace DatabaseConnectionClass
 
                         }
 
+                        break;
+                    case "5":
+                        Console.WriteLine("Enter a Train Number");
+                        int lnTrainNo = int.Parse(Console.ReadLine());
+                        lobjSchedule.VerifyTrainSchedule(lnTrainNo);
+                        
                         break;
 
                 }
