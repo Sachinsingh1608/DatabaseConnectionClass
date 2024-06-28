@@ -188,7 +188,7 @@ namespace DatabaseConnectionClass
         {
 
         }
-        public void show()
+        public void Show()
         {
             string[] lobjTempDate = birth_date.Value.ToString().Split(' ');
             string lstempBirth_Date = lobjTempDate[0];
@@ -673,7 +673,7 @@ namespace DatabaseConnectionClass
                                 lobjScheduleList = lobjSchedule.ListOfSchedule();
                                 foreach (Schedule lobjschedule in lobjScheduleList)
                                 {
-                                    lobjSchedule.Show();
+                                    lobjschedule.Show();
                                 }
                                 Console.ReadKey();
                                 break;
